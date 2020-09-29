@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">D Note</string>
+    <string name="title">Title</string>
+    <string name="fab_content_desc">To Add Notes</string>
+    <string name="enter_your_karma">Enter Your Karma</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_notes">Notes</string>
+    <string name="save">Save</string>
+</resources>
