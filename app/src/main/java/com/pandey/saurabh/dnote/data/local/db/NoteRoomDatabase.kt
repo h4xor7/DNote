@@ -31,7 +31,7 @@ abstract class NoteRoomDatabase :RoomDatabase() {
                     //   noteDao.deleteAll()
 
                     // Add sample words.
-                    var note = Note("hello", "i have some work to do")
+                    var note = Note(System.currentTimeMillis(),"hello", "i have some work to do")
                     noteDao.insertAll(note)
 
                 }
@@ -39,11 +39,6 @@ abstract class NoteRoomDatabase :RoomDatabase() {
         }
 
     }
-
-
-
-
-
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

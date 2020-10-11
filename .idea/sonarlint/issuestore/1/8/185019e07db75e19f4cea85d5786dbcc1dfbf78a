@@ -1,0 +1,21 @@
+
+h
+java:S3252Ÿ"LUse static access with "android.content.Context" for "INPUT_METHOD_SERVICE".(“Ò±™ÿÿÿÿÿ
+]	java:S125E"<This block of commented-out lines of code should be removed.(ÔÌê§øÿÿÿÿ8½ÞÏÉÐ.
+œ
+java:S1186_"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ð¸™áúÿÿÿÿ
+C
+java:S1659"(Declare "tvUserName" on a separate line.(±»Š•þÿÿÿÿ
+]
+java:S1117Y"BRename "imgUserProfile" which hides the field declared at line 30.(ÂñÃÜûÿÿÿÿ
+—
+java:S1186t"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ûŸ¥ï
+A
+java:S1481="&Remove this unused "v" local variable.(Œö³ýÿÿÿÿÿ
+V	java:S110"<This class has 9 parents which is greater than 5 authorized.(å´Ê«ÿÿÿÿÿ
+C
+java:S1185""(Remove this method to simply inherit it.(Û½Ê€þÿÿÿÿ
+G
+java:S1481B"+Remove this unused "llHome" local variable.(öÝ¬)8½ÞÏÉÐ.
+œ
+java:S1186y"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‰ëŽßøÿÿÿÿ

@@ -52,6 +52,20 @@
             android:hint="@string/hint_notes" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textTimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:layout_marginEnd="8dp"
+        android:text="Set Time"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"

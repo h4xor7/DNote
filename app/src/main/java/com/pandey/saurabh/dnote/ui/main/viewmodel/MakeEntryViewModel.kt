@@ -10,14 +10,19 @@ import com.pandey.saurabh.dnote.data.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
- class MakeEntryViewModel(application: Application): AndroidViewModel(application) {
-     val repository:NoteRepository
-    val allNotes :LiveData<List<Note>>
+class MakeEntryViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: NoteRepository
+    val allNotes: LiveData<List<Note>>
+     val sortByIdNotes: LiveData<List<Note>>
+     val sortByTitleNotes: LiveData<List<Note>>
 
     init {
         val noteDao = NoteRoomDatabase.getDatabase(application).noteDao()
         repository = NoteRepository(noteDao)
-       allNotes = repository.allNotes
+        allNotes = repository.allNotes
+        sortByIdNotes= repository.sortByIdNotes
+        sortByTitleNotes= repository.sortByTitleNotes
+
 
     }
 
@@ -25,15 +30,15 @@ import kotlinx.coroutines.launch
      * Launching a new coroutine to insert the data in a non-blocking way
      */
 
-    fun insert(note: Note)= viewModelScope.launch(Dispatchers.IO) {
+    fun insert(note: Note) = viewModelScope.launch(Dispatchers.IO) {
 
         repository.insert(note)
     }
 
-     fun delete(note: Note)= viewModelScope.launch(Dispatchers.IO) {
+    fun delete(note: Note) = viewModelScope.launch(Dispatchers.IO) {
 
-         repository.delete(note)
-     }
+        repository.delete(note)
+    }
 
 
 

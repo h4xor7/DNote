@@ -10,6 +10,8 @@
     <color name="light_green_notes">#C2ECB1</color>
     <color name="light_yellow_notes">#F8DC88</color>
     <color name="fab_red">#FF464E</color>
+    <color name="app_background">#f1f3f6</color>
+    <color name="colorEmpty">#EDEDED</color>
 
 
 </resources>
