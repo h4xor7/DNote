@@ -1,9 +1,36 @@
 <resources>
     <string name="app_name">D Note</string>
-    <string name="title">Title</string>
     <string name="fab_content_desc">To Add Notes</string>
     <string name="enter_your_karma">Enter Your Karma</string>
     <string name="hint_title">Title</string>
     <string name="hint_notes">Notes</string>
     <string name="save">Save</string>
+    <string name="new_note">New note</string>
+    <string name="home">Home</string>
+    <string name="hello_user">Hello User</string>
+
+    <string name="open_nav_drawer">Navigation Drawer Open</string>
+    <string name="close_nav_drawer">Navigation Drawer Closed</string>
+    <string name="all_notes">All Notes</string>
+    <string name="are_you_sure">Do you realy want to Delete ?</string>
+    <string name="title">Title</string>
+    <string name="sort_by">Sort By</string>
+    <string name="id">Id</string>
+
+
+
+    <string name="egg_prompt">How do you like your egg?</string>
+    <string name="timer_on">Start</string>
+    <string name="timer_off">Stop</string>
+    <string name="notification_title">Egg Timer</string>
+    <string name="notification_text">Your egg is ready!!</string>
+
+    <string name="egg_notification_channel_id" translatable="false">egg_channel</string>
+    <string name="egg_notification_channel_name" translatable="true">Egg</string>
+    <string name="breakfast_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="breakfast_notification_channel_name" translatable="true">Breakfast</string>
+    <string name="eggs_ready">It is time! Bon appetit!</string>
+    <string name="snooze">Snooze</string>
+    <string name="breakfast_notification_channel_description">Breakfast reminder</string>
+
 </resources>
