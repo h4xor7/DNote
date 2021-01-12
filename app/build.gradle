@@ -31,6 +31,7 @@ dependencies {
     def room_version = "2.2.5"
     def lifecycle_version = "2.2.0"
     def arch_version = "2.1.0"
+    def lottieVersion ="3.4.4"
 
 
 
@@ -111,5 +112,8 @@ dependencies {
 
     //sdp library
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+    //lottie
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 
 }

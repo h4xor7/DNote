@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Delete All"
-        android:id="@+id/deleteAll"/>
-    <item android:title="Sort by"
-        android:id="@+id/sortBy"/>
+    <item
+        android:id="@+id/deleteAll"
+        android:title="Delete All" />
+    <item
+        android:id="@+id/showAllNotes"
+        android:title="Show All" />
+    <item
+        android:id="@+id/sortBy"
+        android:title="Sort by" />
 </menu>

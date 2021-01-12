@@ -4,13 +4,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_death_note"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_death_note"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
+        <activity android:name=".ui.main.view.AudioNoteActivity"></activity>
         <activity android:name=".ui.main.view.SplashActivity"></activity>
         <activity android:name=".ui.main.view.MakeEntryActivity" />
         <activity android:name=".ui.main.view.MainActivity">
@@ -25,12 +24,14 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-
         <receiver
-            android:name=".service.receiver.AlertReceiver"
+            android:name=".receiver.AlertReceiver"
             android:enabled="true"
-            android:exported="false"
-            ></receiver>
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

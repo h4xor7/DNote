@@ -11,12 +11,11 @@
 
     <string name="open_nav_drawer">Navigation Drawer Open</string>
     <string name="close_nav_drawer">Navigation Drawer Closed</string>
-    <string name="all_notes">All Notes</string>
+    <string name="to_do">To do</string>
     <string name="are_you_sure">Do you realy want to Delete ?</string>
     <string name="title">Title</string>
     <string name="sort_by">Sort By</string>
     <string name="id">Id</string>
-
 
 
     <string name="egg_prompt">How do you like your egg?</string>

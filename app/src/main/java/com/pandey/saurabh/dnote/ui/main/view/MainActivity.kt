@@ -2,21 +2,13 @@ package com.pandey.saurabh.dnote.ui.main.view
 
 import android.app.Activity
 import android.app.Dialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -28,6 +20,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.pandey.saurabh.dnote.R
 import com.pandey.saurabh.dnote.data.model.Note
+import com.pandey.saurabh.dnote.ui.main.adapter.CompletedNoteAdapter
 import com.pandey.saurabh.dnote.ui.main.adapter.NotesAdapter
 import com.pandey.saurabh.dnote.ui.main.viewmodel.MakeEntryViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,10 +29,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var makeEntryViewModel: MakeEntryViewModel
+    private  lateinit var  getDoneViewModel: MakeEntryViewModel
     private val newEntryRequestCode = 1
+    private var isBottomVisible: Boolean = true
 
     lateinit var adapter: NotesAdapter
-
+    lateinit var mAdapter: CompletedNoteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,20 +45,65 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rvNotes.layoutManager = layoutManager
         adapter = NotesAdapter(this)
-        rvNotes.adapter = adapter
 
-        onSwipeDelete()
 
-        observeViewModel()
-        showDrawer()
+        val mlayoutManager = LinearLayoutManager(this)
+        mlayoutManager.orientation = LinearLayoutManager.VERTICAL
+        rvCompletedNotes.layoutManager = mlayoutManager
+        mAdapter = CompletedNoteAdapter(this)
 
-        fabButton.setOnClickListener {
-            val makeEntryIntent = Intent(this, MakeEntryActivity::class.java)
-            startActivityForResult(makeEntryIntent, newEntryRequestCode)
+        textCompleted.setOnClickListener {
+            if (isBottomVisible) {
+                isBottomVisible = false
+                rvCompletedNotes.visibility = View.GONE
+                textCompleted.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_baseline_keyboard_arrow_up_24,
+                    0,
+                    0,
+                    0
+                );
+
+            } else {
+
+                isBottomVisible = true
+                rvCompletedNotes.visibility = View.VISIBLE
+                textCompleted.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_baseline_keyboard_arrow_down_24,
+                    0,
+                    0,
+                    0
+                );
+
+            }
+
+
         }
 
 
 
+        rvNotes.adapter = adapter
+        adapter.setEventListener(object : NotesAdapter.EventListener {
+            override fun onListItemClick(viewHolder: NotesAdapter.NoteViewHolder, position: Int) {
+
+                val note = adapter.getNoteAtPosition(position)?.note?.let { it1 -> Note(it1, true) }
+                note?.id = adapter.getNoteAtPosition(position)?.id
+                note?.let { makeEntryViewModel.update(it) }
+                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+
+            }
+
+        })
+
+        rvCompletedNotes.adapter = mAdapter
+
+        onSwipeDelete()
+        observeViewModel()
+        showDrawer()
+        fabButton.setOnClickListener {
+            val makeEntryIntent = Intent(this, MakeEntryActivity::class.java)
+            startActivityForResult(makeEntryIntent, newEntryRequestCode)
+        }
 
     }
 
@@ -73,13 +113,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (requestCode == newEntryRequestCode && resultCode == Activity.RESULT_OK) {
             val noteText = data?.getStringExtra(MakeEntryActivity.EXTRA_NOTE)
-            val noteTitle = data?.getStringExtra(MakeEntryActivity.EXTRA_TITLE)
-            val note = noteTitle?.let { noteText?.let { it1 -> Note(
-                System.currentTimeMillis(),
-                it,
-                it1
-            ) } }
 
+            val note = noteText?.let { Note(it, false) }
             note?.let { makeEntryViewModel.insert(it) }
 
         } else {
@@ -102,12 +137,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                showCustomDialog(resources.getString(R.string.are_you_sure), viewHolder)
+                val position = viewHolder.adapterPosition
+                val note = mAdapter.getNoteAtPosition(position)
+                note?.let { makeEntryViewModel.delete(it) }
+                adapter.notifyItemChanged(position)
+
+
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(itemCallback)
-        itemTouchHelper.attachToRecyclerView(rvNotes)
+        itemTouchHelper.attachToRecyclerView(rvCompletedNotes)
 
     }
 
@@ -123,10 +163,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+
         makeEntryViewModel = ViewModelProvider(this, factory).get(MakeEntryViewModel::class.java)
+
+        getDoneViewModel = ViewModelProvider(this,factory).get(MakeEntryViewModel::class.java)
+
+
+
         makeEntryViewModel.allNotes.observe(this, Observer { notes ->
             notes?.let { adapter.setNotes(it) }
         })
+
+
+
+
+        getDoneViewModel.allDoneNotes.observe(this, { notes ->
+            notes?.let { mAdapter.setCompletedNotes(it) }
+        })
+
 
 
     }
@@ -163,20 +217,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
 
             R.id.sortBy -> {
-                /*   makeEntryViewModel.allNotes.observe(this, Observer { notes ->
-                       notes?.let { adapter.setNotes(it) }
-                   })*/
-
-                showSortByDialog()
 
 
             }
+            R.id.showAllNotes -> {
+/*
+                makeEntryViewModel.sortByIdNotes.observe(this, Observer { notes ->
+                    notes?.let {
+                        adapter.setNotes(it)
+                        adapter.notifyDataSetChanged()
+
+                    }
+                })
+*/
+            }
+
             else -> {
 
                 Toast.makeText(this, "Nothing to do", Toast.LENGTH_SHORT).show()
@@ -187,7 +247,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun showCustomDialog(title: String, viewHolder: RecyclerView.ViewHolder) {
+    private fun showDeleteDialog(title: String, viewHolder: RecyclerView.ViewHolder) {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -198,13 +258,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val noBtn = dialog.findViewById(R.id.btn_no) as MaterialButton
         yesBtn.setOnClickListener {
             val position = viewHolder.adapterPosition
-            val note = adapter.getNoteAtPosition(position)
-            note?.let { makeEntryViewModel.delete(it) }
+            //  val note = adapter.getNoteAtPosition(position)
+            val note = adapter.getNoteAtPosition(position)?.note?.let { it1 -> Note(it1, true) }
+            note?.id = adapter.getNoteAtPosition(position)?.id
+            note?.let { makeEntryViewModel.update(it) }
+            // adapter.notifyItemChanged(position)
+            adapter.notifyDataSetChanged()
             dialog.dismiss()
         }
         noBtn.setOnClickListener {
             adapter.notifyDataSetChanged()
-            dialog.dismiss() }
+            dialog.dismiss()
+        }
         dialog.show()
 
         val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
@@ -215,54 +280,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
-
-    private fun showSortByDialog() {
-
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.sort_by_dialog)
-        val sortTitle = dialog.findViewById(R.id.containerTitle) as ConstraintLayout
-
-        val sortId = dialog.findViewById(R.id.containerId)as ConstraintLayout
-
-
-        sortId.setOnClickListener {
-            makeEntryViewModel.sortByIdNotes.observe(this, Observer { notes ->
-                notes?.let {
-                    adapter.setNotes(it)
-                    adapter.notifyDataSetChanged()
-                    dialog.dismiss()
-
-                }
-            })
-        }
-
-        sortTitle.setOnClickListener {
-            makeEntryViewModel.sortByTitleNotes.observe(this, Observer { notes ->
-                notes?.let {
-                    adapter.setNotes(it)
-                    adapter.notifyDataSetChanged()
-                    dialog.dismiss()
-
-                }
-            })
-        }
-
-
-
-        dialog.show()
-
-        val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(dialog.getWindow()?.getAttributes())
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        dialog.getWindow()?.setAttributes(layoutParams)
+    companion object {
+        const val CHANNEL_ID = "test_channel_id"
     }
 
 
+    /*  viewHolder.itemView.doneCheckbox.setOnCheckedChangeListener { _, isChecked ->
+          if (isChecked) {
+              val position = viewHolder.adapterPosition
+              val note = adapter.getNoteAtPosition(position)?.note?.let { it1 -> Note(it1, true) }
+              note?.id = adapter.getNoteAtPosition(position)?.id
+              note?.let { makeEntryViewModel.update(it) }
+              adapter.notifyItemChanged(position)
+              adapter.notifyDataSetChanged()
+          } else {
 
+          }
+      }*/
 
 
 }

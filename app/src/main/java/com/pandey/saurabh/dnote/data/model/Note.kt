@@ -6,9 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "note_table")
 data class Note(
-    var timestamp: Long = 0L, //for date and time
-    val title: String,
-    val note: String
+ //   var timestamp: Long = 0L, //for date and time
+//    val title: String,
+    val note: String,
+    val isDone :Boolean
 
 ) {
     @PrimaryKey(autoGenerate = true)

@@ -13,13 +13,15 @@ import kotlinx.coroutines.launch
 class MakeEntryViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: NoteRepository
     val allNotes: LiveData<List<Note>>
+    val allDoneNotes :LiveData<List<Note>>
      val sortByIdNotes: LiveData<List<Note>>
      val sortByTitleNotes: LiveData<List<Note>>
 
     init {
         val noteDao = NoteRoomDatabase.getDatabase(application).noteDao()
         repository = NoteRepository(noteDao)
-        allNotes = repository.allNotes
+        allNotes = repository.allToDo
+        allDoneNotes = repository.allDoneNotes
         sortByIdNotes= repository.sortByIdNotes
         sortByTitleNotes= repository.sortByTitleNotes
 
@@ -38,6 +40,10 @@ class MakeEntryViewModel(application: Application) : AndroidViewModel(applicatio
     fun delete(note: Note) = viewModelScope.launch(Dispatchers.IO) {
 
         repository.delete(note)
+    }
+
+    fun  update(note: Note)= viewModelScope.launch (Dispatchers.IO){
+        repository.update(note)
     }
 
 
