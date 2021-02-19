@@ -31,5 +31,8 @@
     <string name="eggs_ready">It is time! Bon appetit!</string>
     <string name="snooze">Snooze</string>
     <string name="breakfast_notification_channel_description">Breakfast reminder</string>
+    <string name="record">Record</string>
+    <string name="voice_notes">Voice Notes</string>
+    <string name="notes">Notes</string>
 
 </resources>

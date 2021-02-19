@@ -18,6 +18,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.pandey.saurabh.dnote.R;
+import com.pandey.saurabh.dnote.ui.main.view.AudioNoteActivity;
+import com.pandey.saurabh.dnote.ui.main.view.MainActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -65,16 +67,25 @@ public class BaseActivity extends AppCompatActivity {
              customSideMenu = (ViewGroup) getLayoutInflater().inflate(R.layout.side_menu, null, false);
             View llHome = (LinearLayout) customSideMenu.findViewById(R.id.llHome);
 
+            View llNotes = (LinearLayout)customSideMenu.findViewById(R.id.llNotes);
 
-          /*  llHome.setOnClickListener(new View.OnClickListener() {
+            llNotes.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), DashboardActivity.class);
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                 }
             });
 
-*/
+
+            llHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AudioNoteActivity.class);
+                    startActivity(intent);
+                }
+            });
+
             View navHeader = (View) customSideMenu.findViewById(R.id.navHeader);
 
             tvEmail = (TextView) navHeader.findViewById(R.id.tvEmail);

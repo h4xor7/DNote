@@ -99,10 +99,8 @@ dependencies {
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'
 
-
     //for fb login
     implementation 'com.facebook.android:facebook-login:5.15.3'
-
 
     // for navigation drawer
     implementation 'com.mikepenz:materialdrawer:6.1.1'

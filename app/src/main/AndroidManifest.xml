@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pandey.saurabh.dnote">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_death_note"
@@ -9,15 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_death_note"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.view.AudioNoteActivity"></activity>
-        <activity android:name=".ui.main.view.SplashActivity"></activity>
-        <activity android:name=".ui.main.view.MakeEntryActivity" />
-        <activity android:name=".ui.main.view.MainActivity">
+        <activity android:name=".ui.main.view.CreateAudioNoteActivity">
+        </activity>
+        <activity android:name=".ui.main.view.AudioNoteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity android:name=".ui.main.view.SplashActivity" />
+        <activity android:name=".ui.main.view.MakeEntryActivity" />
+        <activity android:name=".ui.main.view.MainActivity">
+
         </activity>
 
         <meta-data
