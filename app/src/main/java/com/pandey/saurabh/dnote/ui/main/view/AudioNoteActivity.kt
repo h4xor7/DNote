@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.Window
+import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,8 +23,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.pandey.saurabh.dnote.R
 import com.pandey.saurabh.dnote.data.model.AudioNote
+import com.pandey.saurabh.dnote.data.model.Note
 import com.pandey.saurabh.dnote.ui.base.BaseActivity
 import com.pandey.saurabh.dnote.ui.main.adapter.AudioNoteAdapter
 import com.pandey.saurabh.dnote.ui.main.viewmodel.AudioNoteViewModel
@@ -70,12 +74,10 @@ class AudioNoteActivity : BaseActivity() {
 
                 try {
                     mp.setDataSource(audioNote.filePath)
-
-                    Log.d(Companion.TAG, "onAudioListItemClick: path is ${audioNote.filePath}")
                     mp.prepare()
                     mp.start()
                 }
-                
+
                 catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -204,9 +206,6 @@ class AudioNoteActivity : BaseActivity() {
         intentFilePath = "$filePath/$fileName"
 
 
-
-
-
         try {
             mediaRecorder?.prepare()
             mediaRecorder?.start()
@@ -303,19 +302,14 @@ class AudioNoteActivity : BaseActivity() {
                 val position = viewHolder.adapterPosition
                 val audioNote = audioNoteAdapter.getNoteAtPosition(position)
 
-                val myFilePath = audioNote?.filePath
-                val file: File = File(myFilePath)
-                val deleted = file.delete()
-
-                audioNote?.let { audioNoteViewModel.delete(it) }
-                audioNoteAdapter.notifyItemChanged(position)
+                showDeleteDialog(audioNote!!.noteTitle, viewHolder)
 
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(itemCallback)
         itemTouchHelper.attachToRecyclerView(rvAudioNotes)
-        Toast.makeText(this, "Audio Note Deleted !", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "Audio Note Deleted !", Toast.LENGTH_SHORT).show()
 
     }
 
@@ -325,18 +319,62 @@ class AudioNoteActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        /* if (isRecording){
+         if (isRecording){
              stopRecording()
          }
- */
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isRecording) {
+        /*if (isRecording) {
             stopRecording()
-        }
+        }*/
 
     }
+
+
+    private fun showDeleteDialog(title: String, viewHolder: RecyclerView.ViewHolder) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.custom_dialog)
+        val body = dialog.findViewById(R.id.txt_dia) as TextView
+        body.text = title
+        val yesBtn = dialog.findViewById(R.id.btn_yes) as MaterialButton
+        val noBtn = dialog.findViewById(R.id.btn_no) as MaterialButton
+        yesBtn.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            val audioNote = audioNoteAdapter.getNoteAtPosition(position)
+
+            val myFilePath = audioNote?.filePath
+            val file: File = File(myFilePath)
+            val deleted = file.delete()
+
+            audioNote?.let { audioNoteViewModel.delete(it) }
+            audioNoteAdapter.notifyItemChanged(position)
+
+            dialog.dismiss()
+        }
+        noBtn.setOnClickListener {
+          //  adapter.notifyDataSetChanged()
+            val position = viewHolder.adapterPosition
+            audioNoteAdapter.notifyItemChanged(position)
+            dialog.dismiss()
+        }
+        dialog.show()
+
+        val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.getWindow()?.getAttributes())
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        dialog.getWindow()?.setAttributes(layoutParams)
+    }
+
+
+    private  fun playSpecificFile(filePath :String?){
+
+        Log.d(TAG, "playSpecificFile: testing yml file ")
+    }
+
 
 }
