@@ -9,18 +9,9 @@ jobs:
   steps:
     - name: Checkout the code
       uses: actions/checkout@v2.3.4
-    - name: Setup Java JDK
-      uses: actions/setup-java@v2.0.0
-      with: 
-         java-version: 8
-         distribution: 'adopt'
             
     - name: Build the app
       run: ./gradlew build
         
-    - name: Upload APK
-      uses: actions/upload-artifact@v2.2.3
-      with:
-       name: app
-       key: app/build/outputs/apk/debug/app-debug.apk
+   
 
