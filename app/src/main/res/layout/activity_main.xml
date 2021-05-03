@@ -12,44 +12,87 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvNotes"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layoutAnimation="@anim/layout_animation_fall_down"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="?listPreferredItemHeightLarge"
-            android:fitsSystemWindows="true"
-            android:elevation="8dp"
-            android:theme="@style/ActionBarTheme">
-
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginBottom="8dp"
-                app:expandedTitleMarginTop="26dp"
-                app:expandedTitleMarginStart="16dp"
-                app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                android:layout_height="?listPreferredItemHeightLarge"
+                android:elevation="8dp"
+                android:fitsSystemWindows="true"
+                android:theme="@style/ActionBarTheme">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/mainToolBar"
-                    app:title="@string/all_notes"
+
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    app:layout_collapseMode="pin"/>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
+                    android:layout_height="match_parent"
+                    app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed"
+                    app:contentScrim="?attr/colorPrimary"
+                    app:expandedTitleMarginBottom="8dp"
+                    app:expandedTitleMarginStart="16dp"
+                    app:expandedTitleMarginTop="26dp"
+                    app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/mainToolBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:title="@string/to_do" />
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
-        </com.google.android.material.appbar.AppBarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:layoutAnimation="@anim/layout_animation_fall_down"
+                        android:minHeight="@dimen/_200sdp"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                <TextView
+                    android:id="@+id/textCompleted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:drawablePadding="@dimen/_8sdp"
+                    android:padding="@dimen/_16sdp"
+                    android:text="Completed"
+                    android:textColor="@color/md_black_1000"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCompletedNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layoutAnimation="@anim/layout_animation_fall_down"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fabButton"

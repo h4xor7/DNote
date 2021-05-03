@@ -31,7 +31,7 @@ abstract class NoteRoomDatabase :RoomDatabase() {
                     //   noteDao.deleteAll()
 
                     // Add sample words.
-                    var note = Note(System.currentTimeMillis(),"hello", "i have some work to do")
+                    var note = Note("hello", false)
                     noteDao.insertAll(note)
 
                 }

@@ -2,6 +2,7 @@ package com.pandey.saurabh.dnote.ui.main.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,24 +13,25 @@ import com.pandey.saurabh.dnote.R
 import com.pandey.saurabh.dnote.data.model.Note
 import kotlinx.android.synthetic.main.item_notes.view.*
 
-class NotesAdapter(private val context: Context) :
-    RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+class CompletedNoteAdapter(private val context: Context) : RecyclerView.Adapter<CompletedNoteAdapter.CompletedNoteViewHolder>() {
     var colorRes = 0
     private var lastPosition = -1
     private var notes = emptyList<Note>()
 
-    private var itemListener: EventListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompletedNoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_notes, parent, false)
 
-        return NoteViewHolder(view)
+        return CompletedNoteViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CompletedNoteViewHolder, position: Int) {
 
         val current = notes[position]
         holder.itemView.textNotes.text = current.note
+        holder.itemView.doneCheckbox.isChecked = true
+        holder.itemView.textNotes.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+
         when (position % 4) {
             0 -> holder.itemView.card_parent.setBackgroundColor(Color.parseColor("#BEE9E8"))
             1 -> holder.itemView.card_parent.setBackgroundColor(Color.parseColor("#F3E1E1"))
@@ -37,36 +39,28 @@ class NotesAdapter(private val context: Context) :
             3 -> holder.itemView.card_parent.setBackgroundColor(Color.parseColor("#F8DC88"))
             else -> holder.itemView.card_parent.setBackgroundColor(Color.parseColor("#BEE9E8"))
         }
-        holder.itemView.doneCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-
-                itemListener?.onListItemClick(holder,position)
-            }
-        }
 
         setAnimation(holder.itemView.card_parent, position)
+
     }
 
     override fun getItemCount(): Int {
-
         return notes.size
     }
 
-
-    inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            setEventListener(itemListener)
-        }
-
+    internal fun setCompletedNotes(words: List<Note>) {
+        this.notes = words
+        notifyDataSetChanged()
     }
 
-/*
-    fun removeItem(position: Int) {
-        notes.re
-        notesList.removeAt(position)
-        notifyItemRemoved(position)
+    fun getNoteAtPosition(position: Int): Note? {
+        return this.notes[position]
     }
-*/
+
+
+    inner class CompletedNoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    }
 
 
     private fun setAnimation(viewAnimate: View, position: Int) {
@@ -79,24 +73,4 @@ class NotesAdapter(private val context: Context) :
         }
 
     }
-
-    internal fun setNotes(words: List<Note>) {
-        this.notes = words
-        notifyDataSetChanged()
-    }
-
-    fun getNoteAtPosition(position: Int): Note? {
-        return this.notes.get(position)
-    }
-
-
-    interface EventListener {
-        fun onListItemClick(viewHolder: NoteViewHolder, position: Int)
-    }
-
-    fun setEventListener(onItemClick: EventListener?) {
-        itemListener = onItemClick
-    }
-
-
 }
