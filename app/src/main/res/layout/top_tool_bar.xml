@@ -48,7 +48,10 @@
                 android:contentDescription="@null"
                 android:padding="10dp"
                 android:src="@drawable/ic_close"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imgMenu"
@@ -59,7 +62,10 @@
                 android:contentDescription="@null"
                 android:padding="20dp"
                 android:src="@mipmap/menu"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/img_more"
@@ -69,7 +75,10 @@
                 android:contentDescription="@null"
                 android:padding="10dp"
                 android:src="@drawable/ic_more__white"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvEdit"
@@ -79,7 +88,11 @@
                 android:layout_gravity="center"
                 android:contentDescription="@null"
                 android:text="Edit"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/llUserView"
@@ -103,8 +116,7 @@
                     android:gravity="center"
                     android:paddingLeft="20dp"
                     android:singleLine="true"
-                    android:text="@string/app_name"
-                    />
+                    android:text="@string/app_name" />
 
                 <TextView
                     android:id="@+id/tvTitleText"
@@ -148,7 +160,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
 
 
                 <ImageView
