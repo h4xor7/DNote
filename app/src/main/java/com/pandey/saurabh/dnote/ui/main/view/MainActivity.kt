@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -17,16 +14,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.navigation.NavigationView
 import com.pandey.saurabh.dnote.R
 import com.pandey.saurabh.dnote.data.model.Note
+import com.pandey.saurabh.dnote.ui.base.BaseActivity
 import com.pandey.saurabh.dnote.ui.main.adapter.CompletedNoteAdapter
 import com.pandey.saurabh.dnote.ui.main.adapter.NotesAdapter
 import com.pandey.saurabh.dnote.ui.main.viewmodel.MakeEntryViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity() {
 
     private lateinit var makeEntryViewModel: MakeEntryViewModel
     private  lateinit var  getDoneViewModel: MakeEntryViewModel
@@ -38,8 +35,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(mainToolBar)
 
+        initDrawer(true)
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -97,13 +94,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         rvCompletedNotes.adapter = mAdapter
 
-        onSwipeDelete()
+        onSwipeDeleteCompleted()
         observeViewModel()
-        showDrawer()
         fabButton.setOnClickListener {
             val makeEntryIntent = Intent(this, MakeEntryActivity::class.java)
             startActivityForResult(makeEntryIntent, newEntryRequestCode)
         }
+
 
     }
 
@@ -124,7 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private fun onSwipeDelete() {
+    private fun onSwipeDeleteCompleted( ) {
         val itemCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -140,6 +137,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val position = viewHolder.adapterPosition
                 val note = mAdapter.getNoteAtPosition(position)
                 note?.let { makeEntryViewModel.delete(it) }
+
+
                 adapter.notifyItemChanged(position)
 
 
@@ -150,6 +149,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         itemTouchHelper.attachToRecyclerView(rvCompletedNotes)
 
     }
+
 
     private fun observeViewModel() {
 
@@ -191,30 +191,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun showDrawer() {
 
-        val actionBarDrawerToggle = ActionBarDrawerToggle(
-            this, drawer_layout, mainToolBar,
-            R.string.open_nav_drawer, R.string.close_nav_drawer
-        );
-
-        drawer_layout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-        nav_view.setNavigationItemSelectedListener(this)
-
-
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.id_home -> {
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
-            }
-        }
-        drawer_layout.closeDrawer(GravityCompat.START)
-        return true
-    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
