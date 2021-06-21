@@ -8,10 +8,14 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import android.view.Window
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.pandey.saurabh.dnote.R
 import com.pandey.saurabh.dnote.data.model.AudioNote
-import com.pandey.saurabh.dnote.data.model.Note
 import com.pandey.saurabh.dnote.ui.base.BaseActivity
 import com.pandey.saurabh.dnote.ui.main.adapter.AudioNoteAdapter
 import com.pandey.saurabh.dnote.ui.main.viewmodel.AudioNoteViewModel
@@ -53,6 +56,9 @@ class AudioNoteActivity : BaseActivity() {
     private var state: Boolean = false
     private var intentFilePath: String? = null
     private var recordingStopped: Boolean = false
+    private var isPlaying = false
+    private var updateSeekbar: Runnable? = null
+
     private val newAudioEntryRequestCode = 101
     private lateinit var audioNoteViewModel: AudioNoteViewModel
 
@@ -73,12 +79,12 @@ class AudioNoteActivity : BaseActivity() {
                 val mp = MediaPlayer()
 
                 try {
-                    mp.setDataSource(audioNote.filePath)
+                    /*  mp.setDataSource(audioNote.filePath)
                     mp.prepare()
-                    mp.start()
-                }
+                    mp.start()*/
+                    playerDialog(mp, audioNote)
 
-                catch (e: Exception) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
@@ -368,13 +374,103 @@ class AudioNoteActivity : BaseActivity() {
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
         dialog.getWindow()?.setAttributes(layoutParams)
+
+
     }
 
 
-    private  fun playSpecificFile(filePath :String?){
+    private  fun playSpecificFile(filePath: String?){
 
         Log.d(TAG, "playSpecificFile: testing yml file ")
     }
 
+    fun playerDialog(mediaPlayer: MediaPlayer, audioNote: AudioNote){
+
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_audio_player)
+
+
+      //  val playBtn = dialog.findViewById<ImageView>(R.id.playRecord)
+       // val pauseBtn = dialog.findViewById<ImageView>(R.id.pauseRecord)
+       // val stopBtn =dialog.findViewById<ImageView>(R.id.stopRecord)
+        val title = dialog.findViewById<TextView>(R.id.textView4)
+        val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
+
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                //     pauseAudio()
+
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                if (audioNote != null) {
+                    val progress = seekBar.progress
+                    mediaPlayer.seekTo(progress)
+                    //   resumeAudio()
+                }
+            }
+        })
+        mediaPlayer.setDataSource(audioNote.filePath)
+        mediaPlayer.prepare()
+        mediaPlayer.start()
+        isPlaying = true
+
+
+        seekBar.max = mediaPlayer.duration
+        val  seekBarHandler :Handler = android.os.Handler()
+        updateRunnable(mediaPlayer,seekBar,seekBarHandler)
+        updateSeekbar?.let { seekBarHandler.postDelayed(it,0) }
+
+
+
+
+        dialog.show()
+
+        val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.getWindow()?.getAttributes())
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        dialog.getWindow()?.setAttributes(layoutParams)
+        title.text = audioNote.noteTitle
+
+
+
+        mediaPlayer.setOnCompletionListener {
+            mediaPlayer.stop()
+            isPlaying = false
+            dialog.dismiss()
+        }
+
+       /* playBtn.setOnClickListener {
+            if (isPlaying){
+                Toast.makeText(dialog.context, "Already Playing", Toast.LENGTH_SHORT).show()
+            }else{
+
+                mediaPlayer.start()
+                isPlaying = true
+            }
+        }
+
+
+        stopBtn.setOnClickListener {
+            mediaPlayer.stop()
+            isPlaying = false
+            dialog.dismiss()
+        }*/
+    }
+
+
+    private fun updateRunnable(mediaPlayer: MediaPlayer,seekBar: SeekBar,handler: Handler) {
+        updateSeekbar = object : Runnable {
+            override fun run() {
+                seekBar.setProgress(mediaPlayer.getCurrentPosition())
+                handler.postDelayed(this, 500)
+            }
+        }
+    }
 
 }
